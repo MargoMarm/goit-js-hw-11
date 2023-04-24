@@ -1,3 +1,65 @@
 .load-more.hidden {
   display: none;
 }
+
+.load-more {
+  align-items: center;
+  background-color: rgb(153, 237, 225);
+  border-radius: 24px;
+  border-style: none;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  color: #3c4043;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 500;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: 0.25px;
+  max-width: 100%;
+  padding: 2px 24px;
+  text-align: center;
+
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+
+  margin: 0 auto;
+}
+
+.load-more:hover:not(diseabled) {
+  background: #f6f9fe;
+  color: #174ea6;
+}
+
+
+
+
+
+.load-more:hover:not(:disabled) {
+  filter: brightness(1.1);
+  -webkit-filter: brightness(1.1);
+}
+
+
+
+
+
+
+// .button-17:not(:disabled) {
+//   box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+// }
+
+// .button-17:not(:disabled):hover {
+//   box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+// }
+
+// .button-17:not(:disabled):focus {
+//   box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+// }
+
+
+// .load-more:disabled {
+// 	background: #f6f9fe;
+//   box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+// }

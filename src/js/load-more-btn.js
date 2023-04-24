@@ -13,7 +13,7 @@ export default class LoadMoreBtn {
     this.btn.textContent = 'Load more...';
   }
 
-  disabled() {
+	disabled() {
     this.btn.disabled = true;
     this.btn.textContent = 'Loading...';
   }

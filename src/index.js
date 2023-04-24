@@ -3,7 +3,6 @@ import LoadMoreBtn from './js/load-more-btn';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import axios from 'axios';
 
 const searchFromRef = document.querySelector('.search-form');
 const galletyRef = document.querySelector('.gallery');
@@ -14,8 +13,9 @@ const loadMorebtn = new LoadMoreBtn({ selector: '.load-more', isHidden: true });
 searchFromRef.addEventListener('submit', onSearch);
 btnLoadMoreRef.addEventListener('click', onLoadMore);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
+
   picsApi.topic = e.currentTarget.elements.searchQuery.value.trim();
   picsApi.resetPage();
   resetMarkup();
@@ -25,20 +25,46 @@ function onSearch(e) {
     return;
   }
 
-	loadMorebtn.show();
-	loadMorebtn.disabled();
-  picsApi.fetchPics().then(({ hits }) => {
-    console.log(hits);
-    console.log(hits.length);
+  loadMorebtn.show();
+  loadMorebtn.disabled();
+
+  try {
+    const { totalHits, hits } = await picsApi.fetchPics();
+
     if (hits.length === 0) {
+      loadMorebtn.hide();
       Notiflix.Notify.warning(
         '"Sorry, there are no images matching your search query. Please try again."'
       );
       return;
     }
+
+    Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
 	  rendermarkup(hits);
-	  loadMorebtn.enable();
-  });
+	  autoScroll(0.35);
+    loadMorebtn.enable();
+  } catch (error) {
+    Notiflix.Notify.failure('Oops something gone wrong..');
+    console.log(error);
+  }
+}
+async function onLoadMore() {
+  picsApi.page += 1;
+  loadMorebtn.disabled();
+  try {
+    const { totalHits, hits } = await picsApi.fetchPics();
+    if (100 * picsApi.page > totalHits) {
+      return Notiflix.Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
+    loadMorebtn.enable();
+    rendermarkup(hits);
+    autoScroll(2);
+  } catch (error) {
+    Notiflix.Notify.failure('Oops something gone wrong..');
+    console.log(error);
+  }
 }
 
 function makeMarkup({
@@ -85,18 +111,13 @@ function resetMarkup() {
   galletyRef.innerHTML = '';
 }
 
-function onLoadMore() {
-  picsApi.page += 1;
-  picsApi.fetchPics().then(({ hits, totalHits }) => {
-    console.log(picsApi.page);
-    console.log(40 * picsApi.page);
-    console.log(totalHits);
-    if (100 * picsApi.page > totalHits) {
-      return Notiflix.Notify.failure(
-        "We're sorry, but you've reached the end of search results."
-      );
-    }
-    console.log(hits);
-    rendermarkup(hits);
+function autoScroll(n) {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * n,
+    behavior: 'smooth',
   });
 }
